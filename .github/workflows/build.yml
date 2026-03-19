@@ -26,6 +26,9 @@ jobs:
     - name: Configure Kernel
       run: make bravia_defconfig
 
+    - name: Disable GCC plugins
+      run: scripts/config --disable CONFIG_GCC_PLUGINS || true
+
     - name: Build Kernel and Modules
       run: |
         make -j$(nproc) modules
