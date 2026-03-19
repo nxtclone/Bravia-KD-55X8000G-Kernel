@@ -29,10 +29,13 @@ jobs:
     - name: Disable GCC plugins
       run: scripts/config --disable CONFIG_GCC_PLUGINS || true
 
+    - name: Fix dtc build
+      run: sed -i '1i %option noyylloc' scripts/dtc/dtc-lexer.l
+
     - name: Build Kernel and Modules
       run: |
-        make -j$(nproc) modules
-        make -j$(nproc) uImage
+        make -j$(nproc) HOSTCFLAGS="-fcommon" modules
+        make -j$(nproc) HOSTCFLAGS="-fcommon" uImage
 
     - name: Upload Kernel Image
       uses: actions/upload-artifact@v4
