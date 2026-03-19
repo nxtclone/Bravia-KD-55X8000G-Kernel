@@ -1,0 +1,38 @@
+/*
+ * ARM Ltd.
+ *
+ * ARMv8 Foundation model DTS
+ */
+
+/dts-v1/;
+
+/memreserve/ 0x00000000 0x00010000;
+
+/include/ "mt5893_smp_common.dtsi"
+
+/ {
+  /*Add system/vendor/odm entry for early mount */
+  firmware {
+    android {
+      compatible = "android,firmware";
+      fstab {
+        compatible = "android,fstab";
+        system {
+          compatible = "android,system";
+          dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/system";
+          type = "ext4";
+          mnt_flags = "ro,noauto_da_alloc,commit=1";
+          fsmgr_flags = "wait";
+        };
+        vendor {
+          compatible = "android,vendor";
+          dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/vendor";
+          type = "ext4";
+          mnt_flags = "ro,noauto_da_alloc,commit=1";
+          fsmgr_flags = "wait";
+        };
+      }; /*fstab*/
+    }; /*android*/
+  }; /*firmware*/
+}; /*root*/
+

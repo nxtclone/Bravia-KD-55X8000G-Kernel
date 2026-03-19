@@ -1,0 +1,77 @@
+/*
+ * ARM Ltd.
+ *
+ * ARMv8 Foundation model DTS
+ */
+
+/dts-v1/;
+
+/memreserve/ 0x00000000 0x00010000;
+
+/include/ "mt5893_smp_common.dtsi" 
+
+/ {
+  /*Add system/vendor/odm entry for early mount */
+	firmware {
+		android {
+			compatible = "android,firmware";
+			vbmeta {
+				compatible = "android,vbmeta";
+				parts = "vbmeta,dtbo,boot,vendor,linux_rootfs,3rd,factory";
+			};
+			fstab {
+				compatible = "android,fstab";
+				vbmeta {
+					compatible = "android,vbmeta";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/vbmeta";
+					type = "emmc";
+					mnt_flags = "defaults,noatime";
+					fsmgr_flags = "defaults,slotselect";
+				};
+				dtbo {
+					compatible = "android,dtbo";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/dtbo";
+					type = "emmc";
+					mnt_flags = "defaults,noatime";
+					fsmgr_flags = "defaults,slotselect";
+				};
+				boot {
+					compatible = "android,boot";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/boot";
+					type = "emmc";
+					mnt_flags = "defaults,noatime";
+					fsmgr_flags = "defaults,slotselect";
+				};
+				vendor {
+					compatible = "android,vendor";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/vendor";
+					type = "ext4";
+					mnt_flags = "ro,noauto_da_alloc,commit=1";
+					fsmgr_flags = "wait,avb,slotselect";
+				};
+				linux_rootfs {
+					compatible = "android,linux_rootfs";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/linux_rootfs";
+					type = "squashfs";
+					mnt_flags = "ro";
+					fsmgr_flags = "defaults,avb,slotselect";
+				};
+				3rd {
+					compatible = "android,3rd";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/3rd";
+					type = "squashfs";
+					mnt_flags = "ro";
+					fsmgr_flags = "defaults,avb,slotselect";
+				};
+				factory {
+					compatible = "android,factory";
+					dev = "/dev/block/platform/soc/1006d000.MSDC0/by-name/factory";
+					type = "squashfs";
+					mnt_flags = "ro";
+					fsmgr_flags = "defaults,avb,slotselect";
+				};
+			}; /*fstab*/
+		}; /*android*/
+	}; /*firmware*/
+}; /*root*/
+

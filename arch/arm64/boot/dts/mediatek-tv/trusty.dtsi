@@ -1,0 +1,32 @@
+/ {
+	trusty {
+		compatible = "android,trusty-smc-v1";
+		ranges;
+		#address-cells = <2>;
+		#size-cells = <2>;
+
+		irq {
+			compatible = "android,trusty-irq-v1";
+            interrupt-templates = <&IPI 0>,
+                <&gic 1 1 0>,
+                <&gic 1 0 0>;
+            interrupt-ranges = <13 14 0>,
+                <16  31 1>,
+                <32 223 2>;
+		};
+
+		log {
+			compatible = "android,trusty-log-v1";
+		};
+
+		virtio {
+			compatible = "android,trusty-virtio-v1";
+		};
+
+       IPI: interrupt-controller {
+           compatible = "android,CustomIPI";
+           #interrupt-cells = <1>;
+           interrupt-controller;
+       };
+	};
+};

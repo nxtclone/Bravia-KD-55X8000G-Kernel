@@ -1,0 +1,4 @@
++DPM_WATCHDOG y
+ PM_DEBUG y
+ PSTORE y
+ EXPERT y

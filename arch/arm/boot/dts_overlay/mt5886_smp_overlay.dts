@@ -1,0 +1,22 @@
+/*
+ * ARM Ltd.
+ *
+ * ARMv8 Foundation model DTS
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    fragment@0 {
+        target = <&cpu_dvfs>;
+        __overlay__ {
+            compatible = "mediatek,mt53xx-cpufreq";
+            operating-points = <
+                    /* KHz    uV */
+                    1000000 975000
+            >;
+        };
+    };
+};
+

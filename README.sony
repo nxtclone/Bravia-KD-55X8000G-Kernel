@@ -1,0 +1,12 @@
+[compiler]
+ARM64 GNU compiler 5.5.0 for Coretex-A
+
+[dependencies]
+none
+
+[build]
+export GPU_SETTING_VER=MALI860
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabi-
+./Build-bravia-kernel.sh
+
