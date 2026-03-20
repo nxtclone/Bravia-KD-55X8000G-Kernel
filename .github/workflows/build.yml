@@ -29,9 +29,6 @@ jobs:
     - name: Disable GCC plugins
       run: scripts/config --disable CONFIG_GCC_PLUGINS || true
 
-    - name: Fix dtc build
-      run: sed -i '1i %option noyylloc' scripts/dtc/dtc-lexer.l
-
     - name: Build Kernel and Modules
       run: |
         make -j$(nproc) HOSTCFLAGS="-fcommon" modules
