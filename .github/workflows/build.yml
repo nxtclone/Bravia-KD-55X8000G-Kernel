@@ -29,7 +29,8 @@ jobs:
                 build-essential bc bison flex libssl-dev libelf-dev \
                 u-boot-tools device-tree-compiler gcc-arm-linux-gnueabi procmail lzop &&
               make bravia_defconfig &&
-              scripts/config --disable CONFIG_GCC_PLUGINS || true &&
+              scripts/config --disable CONFIG_GCC_PLUGINS &&
+              scripts/config --enable CONFIG_DEBUG_INFO &&
               make -j\$(nproc) HOSTCFLAGS=\"-fcommon\" modules &&
               make -j\$(nproc) HOSTCFLAGS=\"-fcommon\" uImage
             "
@@ -39,6 +40,24 @@ jobs:
         with:
           name: uImage
           path: arch/arm/boot/uImage
+
+      - name: Upload vmlinux (with debug symbols)
+        uses: actions/upload-artifact@v4
+        with:
+          name: vmlinux
+          path: vmlinux
+
+      - name: Upload System.map
+        uses: actions/upload-artifact@v4
+        with:
+          name: System.map
+          path: System.map
+
+      - name: Upload kernel config
+        uses: actions/upload-artifact@v4
+        with:
+          name: config
+          path: .config
 
       - name: Upload Kernel Modules
         uses: actions/upload-artifact@v4
