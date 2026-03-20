@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest        # runner mới nhất vẫn hỗ trợ Docker
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -19,6 +19,8 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
+            -e ARCH=arm \
+            -e CROSS_COMPILE=arm-linux-gnueabi- \
             ubuntu:20.04 \
             bash -c "
               export DEBIAN_FRONTEND=noninteractive &&
