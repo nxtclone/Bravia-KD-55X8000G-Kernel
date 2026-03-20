@@ -1,50 +1,50 @@
 name: Build Kernel
 
 on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+  push: { branches: [main, master] }
+  pull_request: { branches: [main, master] }
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04                     # ⬅️ giảm xuống 20.04
+    runs-on: ubuntu-22.04
     env:
       ARCH: arm
       CROSS_COMPILE: arm-linux-gnueabi-
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential bc bison flex libssl-dev libelf-dev \
-          u-boot-tools device-tree-compiler gcc-arm-linux-gnueabi procmail
-        # Không cần đặt CC riêng – gói cung cấp đúng công cụ
+      - name: Install older toolchain (gcc-5, binutils-2.26)
+        run: |
+          sudo apt-get update
+          # Thêm PPA chứa gcc-5 cho Ubuntu 22.04
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt-get update
+          sudo apt-get install -y gcc-5-arm-linux-gnueabi binutils-2.26
+          # Tạo symlink để các lệnh mặc định (arm-linux-gnueabi-gcc) trỏ đến gcc-5
+          sudo update-alternatives --install /usr/bin/arm-linux-gnueabi-gcc arm-linux-gnueabi-gcc /usr/bin/arm-linux-gnueabi-gcc-5 100
+          # Cài các gói phụ trợ khác
+          sudo apt-get install -y build-essential bc bison flex libssl-dev libelf-dev u-boot-tools device-tree-compiler procmail
 
-    - name: Configure Kernel
-      run: make bravia_defconfig
+      - name: Configure
+        run: make bravia_defconfig
 
-    - name: Disable GCC plugins
-      run: scripts/config --disable CONFIG_GCC_PLUGINS || true
+      - name: Disable GCC plugins
+        run: scripts/config --disable CONFIG_GCC_PLUGINS || true
 
-    - name: Build Kernel and Modules
-      run: |
-        make -j$(nproc) HOSTCFLAGS="-fcommon" modules
-        make -j$(nproc) HOSTCFLAGS="-fcommon" uImage
+      - name: Build
+        run: |
+          make -j$(nproc) HOSTCFLAGS="-fcommon" modules
+          make -j$(nproc) HOSTCFLAGS="-fcommon" uImage
 
-    - name: Upload Kernel Image
-      uses: actions/upload-artifact@v4
-      with:
-        name: uImage
-        path: arch/arm/boot/uImage
-
-    - name: Upload Kernel Modules
-      uses: actions/upload-artifact@v4
-      with:
-        name: kernel-modules
-        path: '**/*.ko'
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: uImage
+          path: arch/arm/boot/uImage
+      - name: Upload modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-modules
+          path: '**/*.ko'
