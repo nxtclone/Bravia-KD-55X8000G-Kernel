@@ -27,7 +27,7 @@ jobs:
               apt-get update &&
               apt-get install -y \
                 build-essential bc bison flex libssl-dev libelf-dev \
-                u-boot-tools device-tree-compiler gcc-arm-linux-gnueabi procmail &&
+                u-boot-tools device-tree-compiler gcc-arm-linux-gnueabi procmail lzop &&
               make bravia_defconfig &&
               scripts/config --disable CONFIG_GCC_PLUGINS || true &&
               make -j\$(nproc) HOSTCFLAGS=\"-fcommon\" modules &&
