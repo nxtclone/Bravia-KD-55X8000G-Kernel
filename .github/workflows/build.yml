@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-20.04                     # ⬅️ giảm xuống 20.04
     env:
       ARCH: arm
       CROSS_COMPILE: arm-linux-gnueabi-
@@ -21,9 +21,10 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential bc bison flex libssl-dev libelf-dev u-boot-tools device-tree-compiler procmail gcc-5-arm-linux-gnueabi binutils-2.26
-        echo "CC=arm-linux-gnueabi-gcc-5" >> $GITHUB_ENV
-        echo "CROSS_COMPILE=arm-linux-gnueabi-" >> $GITHUB_ENV
+        sudo apt-get install -y \
+          build-essential bc bison flex libssl-dev libelf-dev \
+          u-boot-tools device-tree-compiler gcc-arm-linux-gnueabi procmail
+        # Không cần đặt CC riêng – gói cung cấp đúng công cụ
 
     - name: Configure Kernel
       run: make bravia_defconfig
